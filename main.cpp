@@ -4,6 +4,12 @@
 #include <sstream>
 #include <vector>
 
+#include "scanner.h"
+
+#define NO_ERROR      (0)
+#define INPUT_ERROR   (-1)
+#define SCANNER_ERROR (-2)
+
 void usage()
 {
     std::cout << "Usage: cpplox [script]" << std::endl;
@@ -16,20 +22,10 @@ void error_report(std::string message, std::string line, int line_number)
 
 int run(std::string source)
 {
-    std::string              token;
-    std::vector<std::string> tokens;
-    std::stringstream        reader(source);
-    
-    while (std::getline(reader, token, '\n')) 
-    {
-        tokens.push_back(token);
-    }
-
-    for (auto t = tokens.begin(); t != tokens.end(); ++t)
-    {
-        std::cout << *t << std::endl;
-    }
-    return 0;
+    scanner sc(source);
+    if (sc.error()) return SCANNER_ERROR;
+    std::cout << sc;
+    return NO_ERROR;
 }
 
 int run_file(char *file_path)
@@ -49,7 +45,7 @@ int run_prompt()
         getline(std::cin, source);
         run(source);
     }
-    return 0;
+    return NO_ERROR;
 }
 
 int main(int argc, char **argv)
@@ -68,5 +64,5 @@ int main(int argc, char **argv)
         return run_prompt();
     }
 
-    return -1;
+    return INPUT_ERROR;
 }

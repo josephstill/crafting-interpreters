@@ -1,4 +1,5 @@
 #include <string>
+#include <memory>
 
 enum tokentype 
 {
@@ -18,17 +19,34 @@ enum tokentype
   END
 };
 
+class tokendata 
+{
+
+public:
+    
+    tokendata(void *data);
+    ~tokendata();
+    void *data() { return this->opaque; }
+    
+private:    
+    void *opaque;
+};
+
 class token
 {
 
 public:
-    token(tokentype token_type, std::string lexene, int line_number);
+    token(tokentype token_type, std::string lexene, int line_number, void *data);
     token(const token &other);
     ~token();
 
+    friend std::ostream& operator<< (std::ostream& stream, const token& t);
+
 private:
 
-    tokentype   token_type;
-    std::string lexene;
-    int         line_number;
+    tokentype                   token_type;
+    std::string                 lexene;
+    int                         line_number;
+    std::shared_ptr<tokendata>  opaque;
 };
+  
