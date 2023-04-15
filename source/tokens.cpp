@@ -1,27 +1,14 @@
 #include <cstdlib>
 #include <iostream>
 
-#include "tokens.h"
+#include "token.h"
 
-tokendata::tokendata(void *data):
-    opaque(data)
-{
 
-}
-
-tokendata::~tokendata()
-{
-    if (this->opaque)
-    {
-        free(this->opaque);
-    }
-}
-
-token::token(tokentype token_type, std::string lexene, int line_number, void *opaque):
+token::token(tokentype token_type, std::string lexene, int line_number, object *opaque):
     token_type(token_type),
     lexene(lexene),
     line_number(line_number),
-    opaque(new tokendata(opaque)) 
+    opaque(opaque) 
 {
 
 }

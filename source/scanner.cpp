@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "scanner.h"
+#include "odouble.h"
 
 
 std::unordered_map<std::string, tokentype> scanner::keywords = 
@@ -42,7 +43,7 @@ void scanner::add_token(tokentype token_type, int token_start, int current, int 
     add_token(token_type, token_start, current, line_number, NULL);
 }
 
-void scanner::add_token(tokentype token_type, int token_start, int current, int line_number, void *opaque) 
+void scanner::add_token(tokentype token_type, int token_start, int current, int line_number, object *opaque) 
 {
     std::string lexene = this->source.substr(token_start, current - token_start);
     token new_token(token_type, lexene, line_number, opaque);
@@ -245,16 +246,40 @@ void scanner::scan_tokens()
                         {
                             char next_c = this->source[source_position + 1];
                             ++source_position;
-                            if (!is_floating_point(next_c))
+                            if (!is_digit(next_c))
+                            {
+                                break;
+                            }
+                        }
+                        
+                        if (source_position + 1 <= this->source.size()) 
+                        {
+                            char next_c = this->source[source_position + 1];
+                            ++source_position;
+                            if (next_c == '.')
+                            {
+                             
+                            }
+                        } 
+                        else
+                        {
+                            this->has_error = true;    
+                        }                       
+
+                        while (source_position + 1 <= this->source.size())
+                        {
+                            char next_c = this->source[source_position + 1];
+                            ++source_position;
+                            if (!is_digit(next_c))
                             {
                                 break;
                             }
                         }
 
                         std::string floating_point_string = this->source.substr(token_start, source_position - token_start);
-                        double *floating_point = (double *) malloc(sizeof(double));
-                        *floating_point = std::stod(floating_point_string);
-                        add_token(NUMBER, token_start, source_position, line_number, (void *) floating_point);
+                        odouble *d = new odouble(floating_point_string);
+
+                        add_token(NUMBER, token_start, source_position, line_number, d);
                     }
                     else if (is_alphabet(c))
                     {

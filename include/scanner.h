@@ -1,8 +1,12 @@
+#ifndef SCANNER_H
+#define SCANNER_H
+
 #include <string>
 #include <vector>
 #include <unordered_map>
 
-#include "tokens.h"
+#include "token.h"
+#include "object.h"
 
 class scanner
 {
@@ -15,7 +19,7 @@ public:
 
 private:
     void add_token(tokentype token_type, int token_start, int current, int line_number);
-    void add_token(tokentype token_type, int token_start, int current, int line_number, void *opaque);
+    void add_token(tokentype token_type, int token_start, int current, int line_number, object *opaque);
     bool check(char c, int position);
     bool is_alphabet(char c);
     bool is_alpha_numeric(char c);
@@ -28,3 +32,5 @@ private:
     bool                                              has_error;
     static std::unordered_map<std::string, tokentype> keywords;
 };
+
+#endif
