@@ -3,6 +3,7 @@
 
 #include "scanner.h"
 #include "odouble.h"
+#include "oexception.h"
 
 
 std::unordered_map<std::string, tokentype> scanner::keywords = 
@@ -72,11 +73,6 @@ bool scanner::is_alpha_numeric(char c)
 bool scanner::is_digit(char c)
 {
     return c >= '0' && c <= '9';
-}
-
-bool scanner::is_floating_point(char c)
-{
-    return c >= '0' && c <= '9' || c == '.';        
 }
 
 void scanner::scan_tokens()
@@ -223,6 +219,7 @@ void scanner::scan_tokens()
                     if (source_position >= this->source.size())
                     {
                         this->has_error = true;
+                        throw oexceprion(SCANERROR, "There is an unterminated string.", line_number);
                     }
 
                     std::string literal = this->source.substr(token_start + 1, (source_position - token_start - 1));
@@ -261,11 +258,7 @@ void scanner::scan_tokens()
                              
                             }
                         } 
-                        else
-                        {
-                            this->has_error = true;    
-                        }                       
-
+                    
                         while (source_position + 1 <= this->source.size())
                         {
                             char next_c = this->source[source_position + 1];
@@ -303,6 +296,7 @@ void scanner::scan_tokens()
                     else
                     {
                         this->has_error = true;
+                        throw oexceprion(SCANERROR, "There was an unknown token", line_number);
                     }
                 }            
             }

@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "scanner.h"
+#include "oexception.h"
 
 #define NO_ERROR      (0)
 #define INPUT_ERROR   (-1)
@@ -22,9 +23,16 @@ void error_report(std::string message, std::string line, int line_number)
 
 int run(std::string source)
 {
-    scanner sc(source);
-    if (sc.error()) return SCANNER_ERROR;
-    std::cout << sc;
+    try
+    {
+        scanner sc(source);
+        if (sc.error()) return SCANNER_ERROR;
+        std::cout << sc;
+    }
+    catch (oexceprion e)
+    {
+        std::cout << e << std::endl;
+    }
     return NO_ERROR;
 }
 

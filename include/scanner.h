@@ -24,7 +24,6 @@ private:
     bool is_alphabet(char c);
     bool is_alpha_numeric(char c);
     bool is_digit(char c);
-    bool is_floating_point(char c);
     void scan_tokens();
 
     std::string                                       source;
