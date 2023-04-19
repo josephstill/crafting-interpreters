@@ -1,7 +1,7 @@
 #include <sstream>
 #include <string>
 
-#include "odouble.h"
+#include "types/odouble.h"
 
 odouble::odouble(double value):
     value(value)

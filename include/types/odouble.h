@@ -1,7 +1,7 @@
 #ifndef ODOUBLE_H
 #define ODOUBLE_H
 
-#include "object.h"
+#include "types/object.h"
 
 class odouble: public object
 {

@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "scanner.h"
-#include "oexception.h"
+#include "types/oexception.h"
 
 #define NO_ERROR      (0)
 #define INPUT_ERROR   (-1)

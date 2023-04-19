@@ -1,6 +1,11 @@
 #include <sstream>
 
-#include "oexception.h"
+#include "types/oexception.h"
+
+std::unordered_map<oexceprion::exceptiontype, std::string> oexceprion::exception_names = 
+{
+    {SCANERROR, "Scanner Error"},
+};
 
 oexceprion::oexceprion(exceptiontype type, std::string reason, int line_number):
     line_number(line_number),

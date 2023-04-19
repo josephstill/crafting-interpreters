@@ -3,10 +3,11 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 #include <unordered_map>
 
-#include "token.h"
-#include "object.h"
+#include "tokens/token.h"
+#include "types/object.h"
 
 class scanner
 {
@@ -27,7 +28,7 @@ private:
     void scan_tokens();
 
     std::string                                       source;
-    std::vector<token>                                tokens; 
+    std::vector<std::shared_ptr<token>>               tokens; 
     bool                                              has_error;
     static std::unordered_map<std::string, tokentype> keywords;
 };

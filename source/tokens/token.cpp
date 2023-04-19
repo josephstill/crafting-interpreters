@@ -1,7 +1,7 @@
 #include <cstdlib>
-#include <iostream>
+#include <sstream>
 
-#include "token.h"
+#include "tokens/token.h"
 
 
 token::token(tokentype token_type, std::string lexene, int line_number, object *opaque):
@@ -27,8 +27,14 @@ token::~token()
 
 }
 
-std::ostream& operator<< (std::ostream& stream, const token& t)
+std::string token::to_string() const 
 {
-    stream << t.line_number << ": " << t.lexene;
-    return stream;
-}
+    std::stringstream stream;
+    stream << this->lexene;
+    return stream.str();
+} 
+
+std::string token::type_name() const 
+{
+    return "token";
+}  

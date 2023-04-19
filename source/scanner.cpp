@@ -2,8 +2,8 @@
 #include <iostream>
 
 #include "scanner.h"
-#include "odouble.h"
-#include "oexception.h"
+#include "types/odouble.h"
+#include "types/oexception.h"
 
 
 std::unordered_map<std::string, tokentype> scanner::keywords = 
@@ -47,7 +47,7 @@ void scanner::add_token(tokentype token_type, int token_start, int current, int 
 void scanner::add_token(tokentype token_type, int token_start, int current, int line_number, object *opaque) 
 {
     std::string lexene = this->source.substr(token_start, current - token_start);
-    token new_token(token_type, lexene, line_number, opaque);
+    std::shared_ptr<token> new_token(new token(token_type, lexene, line_number, opaque));
     this->tokens.push_back(new_token);
 }
 
@@ -219,7 +219,7 @@ void scanner::scan_tokens()
                     if (source_position >= this->source.size())
                     {
                         this->has_error = true;
-                        throw oexceprion(SCANERROR, "There is an unterminated string.", line_number);
+                        throw oexceprion(oexceprion::SCANERROR, "There is an unterminated string.", line_number);
                     }
 
                     std::string literal = this->source.substr(token_start + 1, (source_position - token_start - 1));
@@ -296,7 +296,7 @@ void scanner::scan_tokens()
                     else
                     {
                         this->has_error = true;
-                        throw oexceprion(SCANERROR, "There was an unknown token", line_number);
+                        throw oexceprion(oexceprion::SCANERROR, "There was an unknown token", line_number);
                     }
                 }            
             }

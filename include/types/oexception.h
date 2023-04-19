@@ -2,14 +2,21 @@
 #define OEXCEPTION_H
 
 #include <string>
+#include <unordered_map>
 
 #include "object.h"
-#include "exceptiontypes.h"
+
+
 
 class oexceprion: public object
 {
 
 public:
+    enum exceptiontype 
+    {
+        SCANERROR,
+    };
+
     oexceprion(exceptiontype type, std::string reason, int line_number);
     oexceprion(const oexceprion &other);
     ~oexceprion();
@@ -21,6 +28,7 @@ private:
     int              line_number;
     std::string      reason;
     exceptiontype    type;
+    static std::unordered_map<exceptiontype, std::string> exception_names;
 
 };
 

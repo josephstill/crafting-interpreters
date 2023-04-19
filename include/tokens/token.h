@@ -4,10 +4,10 @@
 #include <string>
 #include <memory>
 
-#include "tokentype.h"
-#include "object.h"
+#include "tokens/tokentype.h"
+#include "types/object.h"
 
-class token
+class token: public object
 {
 
 public:
@@ -15,7 +15,8 @@ public:
     token(const token &other);
     ~token();
 
-    friend std::ostream& operator<< (std::ostream& stream, const token& t);
+    virtual std::string to_string() const; 
+    virtual std::string type_name() const;  
 
 private:
 
