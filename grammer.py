@@ -12,8 +12,6 @@ class class_file:
         self._arg_list = arg_list
 
         self._gen_arg_strings()
-        self._gen_header()
-        self._gen_source()
 
     def _gen_arg_strings(self) -> None:
         self._arg_strings = []
@@ -126,6 +124,25 @@ private:
 
     def __str__(self):
         return f'{self._class_name}:\n\t{self._header_file}\n\t{self._source_file}' 
+    
+    def check_time(self, mtime:float) -> bool:
+        if not self._header_file.exists():
+            return True
+        elif self._header_file.stat().st_mtime < mtime:
+            return True
+        elif not self._source_file.exists():
+            return True
+        elif self._source_file.stat().st_mtime < mtime:
+            return True
+        return False
+    
+    def write(self) -> None:
+        if self._header_file.exists():
+            self._header_file.unlink()
+        if self._source_file.exists():
+            self._source_file.unlink()
+        self._gen_header()
+        self._gen_source()
 
 def parse_expression(line: str, header_dir: Path, source_dir: Path) -> class_file:
     line_data = line.split(':')
@@ -179,5 +196,8 @@ if __name__ == "__main__":
     if not source_dir.exists():
         source_dir.mkdir()
 
-    parse_grammer_file(grammer_file, include_dir, source_dir)
+    grammer_update_time = grammer_file.stat().st_mtime
+    for f in parse_grammer_file(grammer_file, include_dir, source_dir):
+        if f.check_time(grammer_update_time):
+            f.write()
     exit(0)
