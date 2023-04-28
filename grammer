@@ -1,3 +1,4 @@
+ternary  : expression left, token o1, expression center, token o2, expression right 
 binary   : expression left, token op, expression right
 grouping : expression exp
 literal  : object value

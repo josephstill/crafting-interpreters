@@ -11,7 +11,7 @@ $(shell ./grammer.py)
 SRC_LIST:=$(shell find $(SRC_DIR) -name '*.cpp')
 OBJ_LIST:=$(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(SRC_LIST))
 
-CXX_FLAGS:=-I$(INC_DIR)
+CXX_FLAGS:=-I$(INC_DIR) -g
 
 TARGET=$(BIN_DIR)/$(BIN)
 

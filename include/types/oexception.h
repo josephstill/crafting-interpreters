@@ -15,6 +15,7 @@ public:
     enum exceptiontype 
     {
         SCANERROR,
+        PARSEERROR,
     };
 
     oexceprion(exceptiontype type, std::string reason, int line_number);

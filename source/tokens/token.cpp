@@ -4,7 +4,7 @@
 #include "tokens/token.h"
 
 
-token::token(tokentype token_type, std::string lexene, int line_number, object *opaque):
+token::token(tokentype token_type, std::string lexene, int line_number, std::shared_ptr<object> opaque):
     token_type(token_type),
     lexene(lexene),
     line_number(line_number),

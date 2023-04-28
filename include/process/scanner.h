@@ -15,6 +15,7 @@ public:
     scanner(std::string source);
     ~scanner();
     bool error() const { return this->has_error; }
+    std::vector<std::shared_ptr<token>> &get_tokens() { return this->tokens; }
 
     friend std::ostream& operator<< (std::ostream& stream, const scanner& s);
 

@@ -1,8 +1,9 @@
 #include <cstdlib>
 #include <iostream>
 
-#include "scanner.h"
+#include "process/scanner.h"
 #include "types/odouble.h"
+#include "types/ostring.h"
 #include "types/oexception.h"
 
 
@@ -41,13 +42,14 @@ scanner::~scanner()
 
 void scanner::add_token(tokentype token_type, int token_start, int current, int line_number) 
 {
-    add_token(token_type, token_start, current, line_number, NULL);
+    add_token(token_type, token_start, current, line_number, nullptr);
 }
 
 void scanner::add_token(tokentype token_type, int token_start, int current, int line_number, object *opaque) 
 {
+    std::shared_ptr<object> o_ptr(opaque);
     std::string lexene = this->source.substr(token_start, current - token_start);
-    std::shared_ptr<token> new_token(new token(token_type, lexene, line_number, opaque));
+    std::shared_ptr<token> new_token(new token(token_type, lexene, line_number, o_ptr));
     this->tokens.push_back(new_token);
 }
 
@@ -141,6 +143,16 @@ void scanner::scan_tokens()
                     add_token(STAR, token_start, source_position, line_number); 
                     break;
                 } 
+                case '?':
+                {
+                    add_token(QUESTION, token_start, source_position, line_number); 
+                    break;
+                }
+                case ':':
+                {
+                    add_token(COLON, token_start, source_position, line_number); 
+                    break;
+                }
                 case '!':
                 {
                     if (this->check('=', source_position))
@@ -239,9 +251,9 @@ void scanner::scan_tokens()
                 {
                     if (is_digit(c))
                     {
-                        while (source_position + 1 <= this->source.size())
+                        while (source_position <= this->source.size())
                         {
-                            char next_c = this->source[source_position + 1];
+                            char next_c = this->source[source_position];
                             ++source_position;
                             if (!is_digit(next_c))
                             {
@@ -249,9 +261,9 @@ void scanner::scan_tokens()
                             }
                         }
                         
-                        if (source_position + 1 <= this->source.size()) 
+                        if (source_position <= this->source.size()) 
                         {
-                            char next_c = this->source[source_position + 1];
+                            char next_c = this->source[source_position];
                             ++source_position;
                             if (next_c == '.')
                             {
@@ -259,9 +271,9 @@ void scanner::scan_tokens()
                             }
                         } 
                     
-                        while (source_position + 1 <= this->source.size())
+                        while (source_position <= this->source.size())
                         {
-                            char next_c = this->source[source_position + 1];
+                            char next_c = this->source[source_position];
                             ++source_position;
                             if (!is_digit(next_c))
                             {
@@ -276,9 +288,9 @@ void scanner::scan_tokens()
                     }
                     else if (is_alphabet(c))
                     {
-                        while (source_position + 1 <= this->source.size())
+                        while (source_position <= this->source.size())
                         {
-                            char next_c = this->source[source_position + 1];
+                            char next_c = this->source[source_position];
                             ++source_position;
                             if (!is_alpha_numeric(next_c))
                             {
@@ -291,7 +303,13 @@ void scanner::scan_tokens()
                         {
                             tokentype token_type = scanner::keywords[text]; 
                             add_token(token_type, token_start, source_position, line_number);
-                        }                   
+                        } 
+                        else
+                        {
+                            std::string literal = this->source.substr(token_start, source_position - token_start);
+                            ostring *s = new ostring(literal);
+                            add_token(STRING, token_start, source_position, line_number, s);
+                        }                  
                     }
                     else
                     {

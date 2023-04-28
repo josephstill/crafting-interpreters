@@ -4,12 +4,16 @@
 #include <sstream>
 #include <vector>
 
-#include "scanner.h"
+#include "process/scanner.h"
+#include "process/parser.h"
 #include "types/oexception.h"
+
+#include "expression/astprinter.h"
 
 #define NO_ERROR      (0)
 #define INPUT_ERROR   (-1)
 #define SCANNER_ERROR (-2)
+#define PARSE_ERROR   (-3)
 
 void usage()
 {
@@ -27,7 +31,13 @@ int run(std::string source)
     {
         scanner sc(source);
         if (sc.error()) return SCANNER_ERROR;
-        std::cout << sc;
+        std::cout << sc << std::endl;
+        parser pa(sc.get_tokens());
+        std::shared_ptr<expression> exp = pa.parse();
+        
+        astprinter astp;
+        std::shared_ptr<object> r = astp.expression_to_string(exp);
+        std::cout << r << std::endl;
     }
     catch (oexceprion e)
     {
