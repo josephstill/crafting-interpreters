@@ -1,6 +1,9 @@
 #include "process/parser.h"
 #include "tokens/tokentype.h"
 
+#include <iostream>
+#include <sstream>
+
 #include "types/obool.h"
 #include "types/oexception.h"
 #include "types/onull.h"
@@ -143,7 +146,7 @@ std::shared_ptr<expression> parser::parse()
     }
     catch(const oexceprion &e)
     {
-        // For now, do nothing
+        std::cout << e << std::endl;
     }
     return std::shared_ptr<expression>(nullptr);
 }
@@ -187,7 +190,9 @@ std::shared_ptr<expression> parser::primary(int *index)
         return std::shared_ptr<expression>(new groupingexpression(exp));                     
     }    
 
-    this->error("Unexpected token", this->tokens[(*index)]);
+    std::stringstream stream;
+    stream << "Unexpected token " << this->tokens[(*index)]->to_string(); 
+    this->error(stream.str(), this->tokens[(*index)]);
     return std::shared_ptr<expression>(nullptr);
 }
 

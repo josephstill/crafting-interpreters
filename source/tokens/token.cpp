@@ -29,9 +29,7 @@ token::~token()
 
 std::string token::to_string() const 
 {
-    std::stringstream stream;
-    stream << this->lexene;
-    return stream.str();
+    return this->lexene;
 } 
 
 std::string token::type_name() const 
