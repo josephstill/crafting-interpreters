@@ -253,34 +253,32 @@ void scanner::scan_tokens()
                     {
                         while (source_position <= this->source.size())
                         {
-                            char next_c = this->source[source_position];
-                            ++source_position;
+                            char next_c = this->source[source_position];                           
                             if (!is_digit(next_c))
                             {
                                 break;
                             }
+                            ++source_position;
                         }
                         
                         if (source_position <= this->source.size()) 
                         {
                             char next_c = this->source[source_position];
-                            ++source_position;
+                            ++source_position;                             
                             if (next_c == '.')
                             {
-                             
+                                while (source_position <= this->source.size())
+                                {
+                                    next_c = this->source[source_position]; 
+                                    if (!is_digit(next_c))
+                                    {
+                                        break;
+                                    }
+                                    ++source_position;
+                                }                             
                             }
                         } 
                     
-                        while (source_position <= this->source.size())
-                        {
-                            char next_c = this->source[source_position];
-                            ++source_position;
-                            if (!is_digit(next_c))
-                            {
-                                break;
-                            }
-                        }
-
                         std::string floating_point_string = this->source.substr(token_start, source_position - token_start);
                         odouble *d = new odouble(floating_point_string);
 

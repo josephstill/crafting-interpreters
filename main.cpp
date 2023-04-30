@@ -31,7 +31,6 @@ int run(std::string source)
     {
         scanner sc(source);
         if (sc.error()) return SCANNER_ERROR;
-        std::cout << sc << std::endl;
         parser pa(sc.get_tokens());
         std::shared_ptr<expression> exp = pa.parse();
         
