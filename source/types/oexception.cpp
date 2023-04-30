@@ -8,6 +8,7 @@ std::unordered_map<oexceprion::exceptiontype, std::string> oexceprion::exception
 };
 
 oexceprion::oexceprion(exceptiontype type, std::string reason, int line_number):
+    object("exception"),
     line_number(line_number),
     reason(reason),
     type(type) 
@@ -16,6 +17,7 @@ oexceprion::oexceprion(exceptiontype type, std::string reason, int line_number):
 }
 
 oexceprion::oexceprion(const oexceprion &other):
+    object(other.type_name()),
     line_number(other.line_number),
     reason(other.reason),
     type(other.type)  
@@ -34,8 +36,3 @@ std::string oexceprion::to_string() const
     stream << exception_names[this->type] << ": [line " << this->line_number << "] : " << this->reason;
     return stream.str();
 }
-
-std::string oexceprion::type_name() const 
-{
-    return "exception";
-} 

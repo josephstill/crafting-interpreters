@@ -22,8 +22,7 @@ public:
     oexceprion(const oexceprion &other);
     ~oexceprion();
 
-    virtual std::string to_string() const; 
-    virtual std::string type_name() const;    
+    virtual std::string to_string() const;  
 
 private:
     int              line_number;

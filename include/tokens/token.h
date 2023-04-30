@@ -19,8 +19,7 @@ public:
     int line() const { return this->line_number; }
     std::shared_ptr<object> literal() { return this->opaque; }
 
-    virtual std::string to_string() const; 
-    virtual std::string type_name() const;  
+    virtual std::string to_string() const;  
 
 private:
 

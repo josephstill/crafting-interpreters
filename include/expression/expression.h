@@ -14,7 +14,11 @@ public:
     virtual std::shared_ptr<object> accept(expressionvisitor &visitor) = 0;
     
 protected:
-    expression() {}
+    expression():
+        object("expression") 
+    {
+
+    }
 
 };
 

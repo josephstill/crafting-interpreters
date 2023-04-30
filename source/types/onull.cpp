@@ -1,11 +1,13 @@
 #include "types/onull.h"
 
-onull::onull() 
+onull::onull():
+    object("null") 
 {
 
 }
 
-onull::onull(const onull &other) 
+onull::onull(const onull &other):
+    object("null")
 {
 
 }
@@ -19,8 +21,3 @@ std::string onull::to_string() const
 {
     return "nill";
 }
-
-std::string onull::type_name() const 
-{
-    return "null";
-}    

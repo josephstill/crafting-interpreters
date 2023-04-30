@@ -5,6 +5,7 @@
 
 
 token::token(tokentype token_type, std::string lexene, int line_number, std::shared_ptr<object> opaque):
+    object("token"),
     token_type(token_type),
     lexene(lexene),
     line_number(line_number),
@@ -14,6 +15,7 @@ token::token(tokentype token_type, std::string lexene, int line_number, std::sha
 }
 
 token::token(const token &other):
+    object(other.type_name()),
     token_type(other.token_type),
     lexene(other.lexene),
     line_number(other.line_number),
@@ -31,8 +33,3 @@ std::string token::to_string() const
 {
     return this->lexene;
 } 
-
-std::string token::type_name() const 
-{
-    return "token";
-}  

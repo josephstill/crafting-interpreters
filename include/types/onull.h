@@ -12,7 +12,7 @@ public:
     ~onull();
 
     virtual std::string to_string() const; 
-    virtual std::string type_name() const;    
+
 };
 
 #endif
