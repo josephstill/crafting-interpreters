@@ -7,7 +7,6 @@
 #include "types/object.h"
 
 
-
 class oexceprion: public object
 {
 
@@ -16,6 +15,8 @@ public:
     {
         SCANERROR,
         PARSEERROR,
+        INTERPRETERERROR,
+        RUNTIMEERROR,
     };
 
     oexceprion(exceptiontype type, std::string reason, int line_number);

@@ -12,6 +12,13 @@ public:
     obool(const obool &other);
     ~obool();
 
+
+    virtual std::shared_ptr<object> operator<(const std::shared_ptr<object> &other);
+    virtual std::shared_ptr<object> operator>(const std::shared_ptr<object> &other);
+    virtual std::shared_ptr<object> operator==(const std::shared_ptr<object> &other);        
+
+    virtual bool operator!() const { return !this->value; }
+
     virtual std::string to_string() const; 
 
 private:

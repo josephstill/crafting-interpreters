@@ -5,6 +5,8 @@
 std::unordered_map<oexceprion::exceptiontype, std::string> oexceprion::exception_names = 
 {
     {SCANERROR, "Scanner Error"},
+    {PARSEERROR, "Parser Error"},
+    {RUNTIMEERROR, "Runtime Error"},
 };
 
 oexceprion::oexceprion(exceptiontype type, std::string reason, int line_number):

@@ -28,6 +28,36 @@ obool::~obool()
 
 }
 
+std::shared_ptr<object> obool::operator<(const std::shared_ptr<object> &other) 
+{
+    if (typeid(*this) == typeid(*other))
+    { 
+        const std::shared_ptr<obool> b_other = std::dynamic_pointer_cast<obool>(other);
+        return std::shared_ptr<obool>(new obool(this->value < b_other->value));
+    }
+    return object::operator<(other);
+}
+
+std::shared_ptr<object> obool::operator>(const std::shared_ptr<object> &other) 
+{
+    if (typeid(*this) == typeid(*other))
+    { 
+        const std::shared_ptr<obool> b_other = std::dynamic_pointer_cast<obool>(other); 
+        return std::shared_ptr<obool>(new obool(this->value > b_other->value));       
+    }
+    return object::operator>(other);
+}
+
+std::shared_ptr<object> obool::operator==(const std::shared_ptr<object> &other) 
+{
+    if (typeid(*this) == typeid(*other))
+    { 
+        const std::shared_ptr<obool> b_other = std::dynamic_pointer_cast<obool>(other);
+        return std::shared_ptr<obool>(new obool(this->value == b_other->value));
+    }
+    return object::operator==(other);
+}     
+
 std::string obool::to_string() const 
 {
     std::stringstream stream;

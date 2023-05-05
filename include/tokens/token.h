@@ -7,7 +7,7 @@
 #include "tokens/tokentype.h"
 #include "types/object.h"
 
-class token: public object
+class token
 {
 
 public:
@@ -21,6 +21,10 @@ public:
 
     virtual std::string to_string() const;  
 
+    friend std::ostream& operator<<(std::ostream& stream, const token &t);
+    friend std::ostream& operator<<(std::ostream& stream, const token *t);
+    friend std::ostream& operator<<(std::ostream& stream, const std::shared_ptr<token> &t);
+        
 private:
 
     tokentype                   token_type;

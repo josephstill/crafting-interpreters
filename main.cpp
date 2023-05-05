@@ -6,9 +6,10 @@
 
 #include "process/scanner.h"
 #include "process/parser.h"
+#include "process/interpreter.h"
 #include "types/oexception.h"
 
-#include "expression/astprinter.h"
+
 
 #define NO_ERROR      (0)
 #define INPUT_ERROR   (-1)
@@ -33,10 +34,11 @@ int run(std::string source)
         if (sc.error()) return SCANNER_ERROR;
         parser pa(sc.get_tokens());
         std::shared_ptr<expression> exp = pa.parse();
-        
-        astprinter astp;
-        std::shared_ptr<object> r = astp.expression_to_string(exp);
-        std::cout << r << std::endl;
+
+        interpreter i;
+        std::shared_ptr<object> obj = i.evaluate(exp);
+        std::cout << obj << std::endl;
+
     }
     catch (oexceprion e)
     {

@@ -219,11 +219,16 @@ void scanner::scan_tokens()
                 case '\"':
                 {
                     int line_inc = 0;
-                    while (source_position < this->source.size() && this->source[source_position] != '\"')
+                    while (source_position <= this->source.size())
                     {
-                        if (this->source[source_position] != '\n')
+                        char next_c = this->source[source_position];  
+                        if (next_c == '\n')
                         {
                             ++line_inc;
+                        }
+                        else if (next_c == '\"');
+                        {
+                            break;
                         }
                         ++source_position;
                     }

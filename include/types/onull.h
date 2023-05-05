@@ -11,6 +11,9 @@ public:
     onull(const onull &other);
     ~onull();
 
+    virtual std::shared_ptr<object> operator==(const std::shared_ptr<object> &other);
+    virtual bool operator!() const { return true; }
+    
     virtual std::string to_string() const; 
 
 };
