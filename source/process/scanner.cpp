@@ -216,31 +216,33 @@ void scanner::scan_tokens()
                     }
                     break;
                 }
-                case '\"':
+                case '"':
                 {
                     int line_inc = 0;
                     while (source_position <= this->source.size())
                     {
                         char next_c = this->source[source_position];  
+                        ++source_position;
+            
                         if (next_c == '\n')
                         {
                             ++line_inc;
                         }
-                        else if (next_c == '\"');
+                        else if (next_c == '"')
                         {
                             break;
                         }
-                        ++source_position;
                     }
 
-                    if (source_position >= this->source.size())
+                    if (source_position > this->source.size())
                     {
                         this->has_error = true;
                         throw oexceprion(oexceprion::SCANERROR, "There is an unterminated string.", line_number);
                     }
 
-                    std::string literal = this->source.substr(token_start + 1, (source_position - token_start - 1));
-                    add_token(STRING, token_start, source_position, line_number);
+                    std::string literal = this->source.substr(token_start + 1, (source_position - token_start - 2));
+                    ostring *s = new ostring(literal);
+                    add_token(STRING, token_start, source_position, line_number, s);
 
                     line_number += line_inc;
                     break;

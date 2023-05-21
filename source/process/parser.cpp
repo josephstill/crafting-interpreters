@@ -147,6 +147,7 @@ std::shared_ptr<expression> parser::parse()
     catch(const oexceprion &e)
     {
         std::cout << e << std::endl;
+        throw oexceprion(oexceprion::PARSEERROR, e.to_string(), e.line());    
     }
     return std::shared_ptr<expression>(nullptr);
 }
@@ -193,6 +194,7 @@ std::shared_ptr<expression> parser::primary(int *index)
     std::stringstream stream;
     stream << "Unexpected token " << this->tokens[(*index)]->to_string(); 
     this->error(stream.str(), this->tokens[(*index)]);
+
     return std::shared_ptr<expression>(nullptr);
 }
 

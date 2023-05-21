@@ -23,7 +23,9 @@ public:
     oexceprion(const oexceprion &other);
     ~oexceprion();
 
-    virtual std::string to_string() const;  
+    int line() const { return this->line_number; }
+    virtual std::string to_string() const; 
+ 
 
 private:
     int              line_number;

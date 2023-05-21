@@ -15,7 +15,6 @@ public:
 
     parser(std::vector<std::shared_ptr<token>> &tokens);
     ~parser();
-    bool error() const { return this->err; }
     std::shared_ptr<expression> parse();
 
 private:
