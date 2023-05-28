@@ -88,7 +88,7 @@ std::shared_ptr<expression> parser::factor(int *index)
     {
         std::shared_ptr<token> oper = this->tokens[(*index) - 1];
         std::shared_ptr<expression> right = this->unary(index);
-        return std::shared_ptr<expression>(new binaryexpression(exp, oper, right));
+        exp = std::shared_ptr<expression>(new binaryexpression(exp, oper, right));
     }
     return exp;
 }    
@@ -237,7 +237,7 @@ std::shared_ptr<expression> parser::term(int *index)
     {
         std::shared_ptr<token> oper = this->tokens[(*index) - 1];
         std::shared_ptr<expression> right = this->factor(index);
-        return std::shared_ptr<expression>(new binaryexpression(exp, oper, right));
+        exp =  std::shared_ptr<expression>(new binaryexpression(exp, oper, right));
     }
     return exp;
 }

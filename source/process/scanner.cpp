@@ -263,6 +263,7 @@ void scanner::scan_tokens()
                             char next_c = this->source[source_position];                           
                             if (!is_digit(next_c))
                             {
+                                --source_position;
                                 break;
                             }
                             ++source_position;
@@ -279,6 +280,7 @@ void scanner::scan_tokens()
                                     next_c = this->source[source_position]; 
                                     if (!is_digit(next_c))
                                     {
+                                        --source_position;
                                         break;
                                     }
                                     ++source_position;
@@ -299,6 +301,7 @@ void scanner::scan_tokens()
                             ++source_position;
                             if (!is_alpha_numeric(next_c))
                             {
+                                --source_position;
                                 break;
                             }
                         }   
