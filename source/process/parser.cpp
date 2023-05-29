@@ -8,11 +8,11 @@
 #include "types/oexception.h"
 #include "types/onull.h"
 
-#include "generated/ternaryexpression.h"
-#include "generated/binaryexpression.h"
-#include "generated/groupingexpression.h"
-#include "generated/literalexpression.h"
-#include "generated/unaryexpression.h"
+#include "generated/expression/ternaryexpression.h"
+#include "generated/expression/binaryexpression.h"
+#include "generated/expression/groupingexpression.h"
+#include "generated/expression/literalexpression.h"
+#include "generated/expression/unaryexpression.h"
 
 parser::parser(std::vector<std::shared_ptr<token>> &tokens):
     err(false), 

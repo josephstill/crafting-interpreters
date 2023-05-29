@@ -1,7 +1,7 @@
 #ifndef INTERPRETER_H
 #define INTERPRETER_H
 
-#include "generated/expressionvisitor.h"
+#include "generated/expression/expressionvisitor.h"
 
 class interpreter: public expressionvisitor
 {

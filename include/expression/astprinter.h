@@ -1,7 +1,7 @@
 #ifndef ASTPRINTER_H
 #define ASTPRINTER_H
 
-#include "generated/expressionvisitor.h"
+#include "generated/expression/expressionvisitor.h"
 
 class astprinter: public expressionvisitor
 {

@@ -6,7 +6,7 @@ SRC_DIR:=./source
 OBJ_DIR:=./object
 BIN_DIR:=./bin
 
-$(shell ./grammer.py)
+$(shell ./generator.py)
 
 SRC_LIST:=$(shell find $(SRC_DIR) -name '*.cpp')
 OBJ_LIST:=$(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(SRC_LIST))
@@ -29,4 +29,4 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 clean:
 	rm -Rf $(OBJ_DIR)
 	rm -Rf $(BIN_DIR)
-	./grammer.py --clean
+	./generator.py --clean
