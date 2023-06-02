@@ -32,12 +32,7 @@ int run(std::string source)
     {
         scanner sc(source);
         if (sc.error()) return SCANNER_ERROR;
-        parser pa(sc.get_tokens());
-        std::shared_ptr<expression> exp = pa.parse();
-
-        interpreter i;
-        std::shared_ptr<object> obj = i.evaluate(exp);
-        std::cout << obj << std::endl;
+        parser pa;
 
     }
     catch (oexceprion e)

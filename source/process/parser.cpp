@@ -14,9 +14,11 @@
 #include "generated/expression/literalexpression.h"
 #include "generated/expression/unaryexpression.h"
 
-parser::parser(std::vector<std::shared_ptr<token>> &tokens):
-    err(false), 
-    tokens(tokens) 
+#include "generated/statement/printstatement.h"
+#include "generated/statement/expressionstatement.h"
+
+parser::parser():
+    err(false)
 {
 
 }
@@ -26,32 +28,37 @@ parser::~parser()
 
 }
 
-std::shared_ptr<expression> parser::comparison(int *index)
+bool parser::at_end(std::vector<std::shared_ptr<token>> &tokens, int *index) const
+{
+    return *index >= tokens.size();
+}
+
+std::shared_ptr<expression> parser::comparison(std::vector<std::shared_ptr<token>> &tokens, int *index)
 {
     /**
      * comparison → term ( ( ">" | ">=" | "<" | "<=" ) term )*;
      */
-    std::shared_ptr<expression> exp = this->term(index);
-    while (this->match(index, {GREATER, GREATER_EQUAL, LESS, LESS_EQUAL}))
+    std::shared_ptr<expression> exp = this->term(tokens, index);
+    while (this->match(tokens, index, {GREATER, GREATER_EQUAL, LESS, LESS_EQUAL}))
     {
-        std::shared_ptr<token> oper = this->tokens[(*index) - 1];
-        std::shared_ptr<expression> right = this->term(index);
+        std::shared_ptr<token> oper = tokens[(*index) - 1];
+        std::shared_ptr<expression> right = this->term(tokens, index);
         exp = std::shared_ptr<expression>(new binaryexpression(exp, oper, right));
     }
 
     return exp;
 }
 
-std::shared_ptr<expression> parser::equality(int *index)
+std::shared_ptr<expression> parser::equality(std::vector<std::shared_ptr<token>> &tokens, int *index)
 {
     /**
      * equality → comparison ( ( "!=" | "==" ) comparison )*; 
      */
-    std::shared_ptr<expression> exp = this->comparison(index);
-    while (this->match(index, {BANG_EQUAL, EQUAL_EQUAL}))
+    std::shared_ptr<expression> exp = this->comparison(tokens, index);
+    while (this->match(tokens, index, {BANG_EQUAL, EQUAL_EQUAL}))
     {
-        std::shared_ptr<token> oper = this->tokens[(*index) - 1];
-        std::shared_ptr<expression> right = this->comparison(index);
+        std::shared_ptr<token> oper = tokens[(*index) - 1];
+        std::shared_ptr<expression> right = this->comparison(tokens, index);
         exp = std::shared_ptr<expression>(new binaryexpression(exp, oper, right));
     }
 
@@ -63,41 +70,52 @@ void parser::error(std::string message, std::shared_ptr<token> tok)
     throw oexceprion(oexceprion::PARSEERROR, message, tok->line());    
 }
 
-std::shared_ptr<expression> parser::expr(int *index)
+std::shared_ptr<expression> parser::expr(std::vector<std::shared_ptr<token>> &tokens, int *index)
 {
     /**
      * expression → ternary ( ( ",") ternary )*;
      */ 
-    std::shared_ptr<expression> exp = this->ternary(index);  
-    while (this->match(index, {COMMA}))
+    std::shared_ptr<expression> exp = this->ternary(tokens, index);  
+    while (this->match(tokens, index, {COMMA}))
     { 
-        std::shared_ptr<token> oper = this->tokens[(*index) - 1];
-        std::shared_ptr<expression> right = this->ternary(index);
+        std::shared_ptr<token> oper = tokens[(*index) - 1];
+        std::shared_ptr<expression> right = this->ternary(tokens, index);
         exp = std::shared_ptr<expression>(new binaryexpression(exp, oper, right));
     }
     return exp; 
 }
 
-std::shared_ptr<expression> parser::factor(int *index)
+std::shared_ptr<statement> parser::expressionstmt(std::vector<std::shared_ptr<token>> &tokens, int *index)
+{
+    std::shared_ptr<expression> exp = this->expr(tokens, index);
+    if (!this->match(tokens, index, {SEMICOLON}))
+    {
+        this->error("Expected a ;", tokens[(*index)]);
+    }
+
+    return std::shared_ptr<statement>(new expressionstatement(exp));
+} 
+
+std::shared_ptr<expression> parser::factor(std::vector<std::shared_ptr<token>> &tokens, int *index)
 {
     /**
      * factor → unary ( ( "/" | "*" ) unary )*;
      */
-    std::shared_ptr<expression> exp = this->unary(index);
-    while (this->match(index, {SLASH, STAR}))
+    std::shared_ptr<expression> exp = this->unary(tokens, index);
+    while (this->match(tokens, index, {SLASH, STAR}))
     {
-        std::shared_ptr<token> oper = this->tokens[(*index) - 1];
-        std::shared_ptr<expression> right = this->unary(index);
+        std::shared_ptr<token> oper = tokens[(*index) - 1];
+        std::shared_ptr<expression> right = this->unary(tokens, index);
         exp = std::shared_ptr<expression>(new binaryexpression(exp, oper, right));
     }
     return exp;
 }    
 
-bool parser::match(int *index, std::initializer_list<tokentype> types)
+bool parser::match(std::vector<std::shared_ptr<token>> &tokens, int *index, std::initializer_list<tokentype> types)
 {
-    if (*index < this->tokens.size())
+    if (*index < tokens.size())
     {
-        tokentype current = this->tokens[*index]->get_token_type();
+        tokentype current = tokens[*index]->get_token_type();
         for (tokentype t : types)
         {
             if (t == current)
@@ -110,107 +128,132 @@ bool parser::match(int *index, std::initializer_list<tokentype> types)
     return false;
 }
 
-std::shared_ptr<expression> parser::ternary(int *index)
+std::shared_ptr<statement> parser::stmt(std::vector<std::shared_ptr<token>> &tokens, int *index)
+{
+    if (this->match(tokens, index, {PRINT}))
+    {
+        return this->printstmt(tokens, index);
+    }
+
+    return this->expressionstmt(tokens, index);
+}
+
+std::shared_ptr<expression> parser::ternary(std::vector<std::shared_ptr<token>> &tokens, int *index)
 {
     /**
      * ternary → equality ((?) equality (:) equality)?; 
      */    
-    std::shared_ptr<expression> exp = this->equality(index); 
-    if (this->match(index, {QUESTION})) 
+    std::shared_ptr<expression> exp = this->equality(tokens, index); 
+    if (this->match(tokens, index, {QUESTION})) 
     { 
-        std::shared_ptr<token> o1 = this->tokens[(*index) - 1];
-        std::shared_ptr<expression> center = this->equality(index);
+        std::shared_ptr<token> o1 = tokens[(*index) - 1];
+        std::shared_ptr<expression> center = this->equality(tokens, index);
 
-        if (!this->match(index, {COLON}))
+        if (!this->match(tokens, index, {COLON}))
         {
-            this->error("Expected colon", this->tokens[(*index) - 2]);
+            this->error("Expected colon", tokens[(*index) - 2]);
         }
-        std::shared_ptr<token> o2 = this->tokens[(*index) - 1];
-        std::shared_ptr<expression> right = this->equality(index);
+        std::shared_ptr<token> o2 = tokens[(*index) - 1];
+        std::shared_ptr<expression> right = this->equality(tokens, index);
 
         if (!right)
         {
-            this->error("Expected expression", this->tokens[(*index) - 2]);
+            this->error("Expected expression", tokens[(*index) - 2]);
         }
         exp = std::shared_ptr<expression>(new ternaryexpression(exp, o1, center, o2, right));
     } 
     return exp;
 }
 
-std::shared_ptr<expression> parser::parse()
+std::vector<std::shared_ptr<statement>> parser::parse(std::vector<std::shared_ptr<token>> &tokens)
 {
+    int index = 0;
+    std::vector<std::shared_ptr<statement>> ret;
     try
     {
-        int index = 0;
-        return this->expr(&index);
+        while (!this->at_end(tokens, &index)) 
+        {
+            ret.push_back(this->stmt(tokens, &index));
+        }
     }
     catch(const oexceprion &e)
     {
         std::cout << e << std::endl;
         throw oexceprion(oexceprion::PARSEERROR, e.to_string(), e.line());    
     }
-    return std::shared_ptr<expression>(nullptr);
+    return ret;
 }
 
-std::shared_ptr<expression> parser::primary(int *index)
+std::shared_ptr<expression> parser::primary(std::vector<std::shared_ptr<token>> &tokens, int *index)
 {
     /**
      * primary → NUMBER | STRING | "true" | "false" | "nil"
      *           "(" expression ")"; 
      */
-    if (this->match(index, {FALSE})) 
+    if (this->match(tokens, index, {FALSE})) 
     { 
         std::shared_ptr<object> value(new obool(false));
         return std::shared_ptr<expression>(new literalexpression(value));
     }
     
-    if (this->match(index, {TRUE})) 
+    if (this->match(tokens, index, {TRUE})) 
     { 
         std::shared_ptr<object> value(new obool(true));
         return std::shared_ptr<expression>(new literalexpression(value));
     }
     
-    if (this->match(index, {NIL})) 
+    if (this->match(tokens, index, {NIL})) 
     { 
         std::shared_ptr<object> value(new onull());
         return std::shared_ptr<expression>(new literalexpression(value));
     }
 
-    if (this->match(index, {NUMBER, STRING})) 
+    if (this->match(tokens, index, {NUMBER, STRING})) 
     {
-        return std::shared_ptr<expression>(new literalexpression(this->tokens[(*index) - 1]->literal()));        
+        return std::shared_ptr<expression>(new literalexpression(tokens[(*index) - 1]->literal()));        
     }
 
-    if (this->match(index, {LEFT_PAREN})) 
+    if (this->match(tokens, index, {LEFT_PAREN})) 
     {
-        std::shared_ptr<expression> exp = this->expr(index);
-        if (!this->match(index, {RIGHT_PAREN}))
+        std::shared_ptr<expression> exp = this->expr(tokens, index);
+        if (!this->match(tokens, index, {RIGHT_PAREN}))
         {
-            this->error("Expected right parenthesis", this->tokens[(*index) - 2]);
+            this->error("Expected right parenthesis", tokens[(*index) - 2]);
         }
         return std::shared_ptr<expression>(new groupingexpression(exp));                     
     }    
 
     std::stringstream stream;
-    stream << "Unexpected token " << this->tokens[(*index)]->to_string(); 
-    this->error(stream.str(), this->tokens[(*index)]);
+    stream << "Unexpected token " << tokens[(*index)]->to_string(); 
+    this->error(stream.str(), tokens[(*index)]);
 
     return std::shared_ptr<expression>(nullptr);
 }
 
 
-void parser::synchronize(int *index)
+std::shared_ptr<statement> parser::printstmt(std::vector<std::shared_ptr<token>> &tokens, int *index)
+{
+    std::shared_ptr<expression> exp = this->expr(tokens, index);
+    if (!this->match(tokens, index, {SEMICOLON}))
+    {
+        this->error("Expected a ;", tokens[(*index)]);
+    }
+
+    return std::shared_ptr<statement>(new printstatement(exp));
+}
+
+void parser::synchronize(std::vector<std::shared_ptr<token>> &tokens, int *index)
 {
     *index += 1;
     
-    while (*index < this->tokens.size())
+    while (*index < tokens.size())
     {
-        if (this->tokens[*index - 1]->get_token_type() == SEMICOLON)
+        if (tokens[*index - 1]->get_token_type() == SEMICOLON)
         {
             return;
         }
         
-        switch (this->tokens[*index]->get_token_type())
+        switch (tokens[*index]->get_token_type())
         {
             case CLASS:
             case FUN:
@@ -227,32 +270,32 @@ void parser::synchronize(int *index)
     }
 }
 
-std::shared_ptr<expression> parser::term(int *index)
+std::shared_ptr<expression> parser::term(std::vector<std::shared_ptr<token>> &tokens, int *index)
 {
     /**
      * term → factor ( ( "-" | "+" ) factor )*;  
      */
-    std::shared_ptr<expression> exp = this->factor(index);
-    while (this->match(index, {MINUS, PLUS}))
+    std::shared_ptr<expression> exp = this->factor(tokens, index);
+    while (this->match(tokens, index, {MINUS, PLUS}))
     {
-        std::shared_ptr<token> oper = this->tokens[(*index) - 1];
-        std::shared_ptr<expression> right = this->factor(index);
+        std::shared_ptr<token> oper = tokens[(*index) - 1];
+        std::shared_ptr<expression> right = this->factor(tokens, index);
         exp =  std::shared_ptr<expression>(new binaryexpression(exp, oper, right));
     }
     return exp;
 }
 
-std::shared_ptr<expression> parser::unary(int *index) 
+std::shared_ptr<expression> parser::unary(std::vector<std::shared_ptr<token>> &tokens, int *index) 
 {
     /**
      *  unary  → ( "!" | "-" ) unary
      *           | primary;
      */
-    if (this->match(index, {BANG, MINUS}))
+    if (this->match(tokens, index, {BANG, MINUS}))
     {
-        std::shared_ptr<token> oper = this->tokens[(*index) - 1];
-        std::shared_ptr<expression> right = this->unary(index);
+        std::shared_ptr<token> oper = tokens[(*index) - 1];
+        std::shared_ptr<expression> right = this->unary(tokens, index);
         return std::shared_ptr<expression>(new unaryexpression(oper, right));
     }
-    return this->primary(index);
+    return this->primary(tokens, index);
 }

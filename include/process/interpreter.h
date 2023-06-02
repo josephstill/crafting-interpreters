@@ -1,20 +1,17 @@
 #ifndef INTERPRETER_H
 #define INTERPRETER_H
 
-#include "generated/expression/expressionvisitor.h"
+#include "generated/statement/statementvisitor.h"
 
-class interpreter: public expressionvisitor
+class interpreter: public statementvisitor
 {
 
 public:
     interpreter();
     ~interpreter();
-    std::shared_ptr<object> evaluate(std::shared_ptr<expression> &expr);    
-    virtual std::shared_ptr<object> visit_ternaryexpression(ternaryexpression *to_visit);
-    virtual std::shared_ptr<object> visit_binaryexpression(binaryexpression *to_visit);
-    virtual std::shared_ptr<object> visit_groupingexpression(groupingexpression *to_visit);
-    virtual std::shared_ptr<object> visit_literalexpression(literalexpression *to_visit);
-    virtual std::shared_ptr<object> visit_unaryexpression(unaryexpression *to_visit);
+    std::shared_ptr<object> execute(std::shared_ptr<statement> &stmt);    
+    virtual void visit_expressionstatement(expressionstatement *to_visit);
+    virtual void visit_printstatement(printstatement *to_visit);
 
 };
 
