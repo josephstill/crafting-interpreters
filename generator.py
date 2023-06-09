@@ -57,7 +57,7 @@ class expression_class_file:
     {self._class_name}(const {self._class_name} &other);
     ~{self._class_name}(); 
 
-    virtual std::shared_ptr<object> accept(expressionvisitor &visitor);
+    virtual std::shared_ptr<object> accept(expressionvisitor *visitor);
     
     virtual std::string to_string() const; 
     virtual std::string type_name() const;  
@@ -107,11 +107,11 @@ class expression_class_file:
 
 
         source_text += f"""
-std::shared_ptr<object> {self._class_name}::accept(expressionvisitor &visitor)        
+std::shared_ptr<object> {self._class_name}::accept(expressionvisitor *visitor)        
 """
         source_text += '{'
         source_text += f"""
-    return visitor.visit_{self._class_name}(this);
+    return visitor->visit_{self._class_name}(this);
 """
         source_text += '}\n\n'        
         source_text += f'std::string {self._class_name}::to_string() const\n' 
@@ -277,7 +277,7 @@ class statement_class_file:
     {self._class_name}(const {self._class_name} &other);
     ~{self._class_name}(); 
 
-    virtual std::shared_ptr<object> accept(statementvisitor &visitor);
+    virtual void accept(statementvisitor *visitor);
     
     virtual std::string to_string() const; 
     virtual std::string type_name() const;  
@@ -326,11 +326,11 @@ class statement_class_file:
         source_text += '{\n\n}\n\n'   
 
         source_text += f"""
-void {self._class_name}::accept(statementvisitor &visitor)        
+void {self._class_name}::accept(statementvisitor *visitor)        
 """
         source_text += '{'
         source_text += f"""
-    visitor.visit_{self._class_name}(this);
+    visitor->visit_{self._class_name}(this);
 """
         source_text += '}\n\n'        
         source_text += f'std::string {self._class_name}::to_string() const\n' 

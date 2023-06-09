@@ -10,7 +10,7 @@ astprinter::~astprinter() {}
 
 std::shared_ptr<object> astprinter::expression_to_string(std::shared_ptr<expression> &expr)
 {
-    return expr->accept(*this);
+    return expr->accept(this);
 }
 
 std::shared_ptr<object> astprinter::visit_ternaryexpression(ternaryexpression *to_visit)

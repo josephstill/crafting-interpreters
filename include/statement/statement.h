@@ -15,7 +15,7 @@ public:
     virtual std::string to_string() const = 0; 
     virtual std::string type_name() const = 0;  
 
-    virtual std::shared_ptr<object> accept(statementvisitor &visitor) = 0;
+    virtual void accept(statementvisitor *visitor) = 0;
 
     friend std::ostream& operator<<(std::ostream& stream, const statement &s)
     {
