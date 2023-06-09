@@ -26,14 +26,14 @@ void error_report(std::string message, std::string line, int line_number)
     std::cerr << message << std::endl << "[" << line_number << "]\t" << line << std::endl;
 }
 
-int run(std::string source)
+int run(std::string source, interpreter &itrpt)
 {
     try
     {
         scanner sc(source);
         if (sc.error()) return SCANNER_ERROR;
         parser pa;
-
+        itrpt.interpret(pa.parse(sc.get_tokens()));
     }
     catch (oexceprion e)
     {
@@ -44,20 +44,21 @@ int run(std::string source)
 
 int run_file(char *file_path)
 {
-
+    interpreter itrpt;
     std::ifstream source_file(file_path);   
     std::string   source((std::istreambuf_iterator<char>(source_file)), std::istreambuf_iterator<char>());
-    return run(source);
+    return run(source, itrpt);
 }
 
 int run_prompt()
 {
     std::string source;
+    interpreter itrpt;
     while (true)
     {
         std::cout << "> ";
         getline(std::cin, source);
-        run(source);
+        run(source, itrpt);
     }
     return NO_ERROR;
 }

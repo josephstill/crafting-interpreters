@@ -121,7 +121,7 @@ std::shared_ptr<object> interpreter::visit_literalexpression(literalexpression *
 void interpreter::visit_printstatement(printstatement *to_visit) 
 {
     std::shared_ptr<object> val = this->evaluate(to_visit->exp);
-    std::cout << val;
+    std::cout << val << std::endl;
 }
 
 std::shared_ptr<object> interpreter::visit_ternaryexpression(ternaryexpression *to_visit) 
