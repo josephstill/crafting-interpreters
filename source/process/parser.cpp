@@ -104,7 +104,7 @@ std::shared_ptr<expression> parser::equality(std::vector<std::shared_ptr<token>>
 
 void parser::error(std::string message, std::shared_ptr<token> tok)
 {
-    throw oexceprion(oexceprion::PARSEERROR, message, tok->line());    
+    throw oexception(oexception::PARSEERROR, message, tok->line());    
 }
 
 std::shared_ptr<expression> parser::expr(std::vector<std::shared_ptr<token>> &tokens, int *index)
@@ -213,10 +213,10 @@ std::vector<std::shared_ptr<statement>> parser::parse(std::vector<std::shared_pt
             ret.push_back(this->declaration(tokens, &index));
         }
     }
-    catch(const oexceprion &e)
+    catch(const oexception &e)
     {
         std::cout << e << std::endl;
-        throw oexceprion(oexceprion::PARSEERROR, e.to_string(), e.line());    
+        throw oexception(oexception::PARSEERROR, e.to_string(), e.line());    
     }
     return ret;
 }

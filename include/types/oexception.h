@@ -7,7 +7,7 @@
 #include "types/object.h"
 
 
-class oexceprion: public object
+class oexception: public object
 {
 
 public:
@@ -19,9 +19,9 @@ public:
         RUNTIMEERROR,
     };
 
-    oexceprion(exceptiontype type, std::string reason, int line_number);
-    oexceprion(const oexceprion &other);
-    ~oexceprion();
+    oexception(exceptiontype type, std::string reason, int line_number);
+    oexception(const oexception &other);
+    ~oexception();
 
     int line() const { return this->line_number; }
     virtual std::string to_string() const; 

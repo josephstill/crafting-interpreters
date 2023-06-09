@@ -237,7 +237,7 @@ void scanner::scan_tokens()
                     if (source_position > this->source.size())
                     {
                         this->has_error = true;
-                        throw oexceprion(oexceprion::SCANERROR, "There is an unterminated string.", line_number);
+                        throw oexception(oexception::SCANERROR, "There is an unterminated string.", line_number);
                     }
 
                     std::string literal = this->source.substr(token_start + 1, (source_position - token_start - 2));
@@ -322,7 +322,7 @@ void scanner::scan_tokens()
                     else
                     {
                         this->has_error = true;
-                        throw oexceprion(oexceprion::SCANERROR, "There was an unknown token", line_number);
+                        throw oexception(oexception::SCANERROR, "There was an unknown token", line_number);
                     }
                 }            
             }

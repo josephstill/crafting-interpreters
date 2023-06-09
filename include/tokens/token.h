@@ -17,6 +17,7 @@ public:
 
     tokentype get_token_type() const { return this->token_type; }
     int line() const { return this->line_number; }
+    std::string lex() const { return this->lexene; }
     std::shared_ptr<object> literal() { return this->opaque; }
 
     virtual std::string to_string() const;  

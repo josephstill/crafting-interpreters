@@ -35,7 +35,7 @@ int run(std::string source, interpreter &itrpt)
         parser pa;
         itrpt.interpret(pa.parse(sc.get_tokens()));
     }
-    catch (oexceprion e)
+    catch (oexception e)
     {
         std::cout << e << std::endl;
     }

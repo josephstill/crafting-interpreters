@@ -96,9 +96,9 @@ std::shared_ptr<object> interpreter::visit_binaryexpression(binaryexpression *to
                 break;
         }   
     }  
-    catch(const oexceprion &e)
+    catch(const oexception &e)
     {
-        throw oexceprion(oexceprion::INTERPRETERERROR, e.to_string(), to_visit->op->line());
+        throw oexception(oexception::INTERPRETERERROR, e.to_string(), to_visit->op->line());
     }
     return std::shared_ptr<object>(new onull());
 }     
@@ -142,7 +142,7 @@ std::shared_ptr<object> interpreter::visit_ternaryexpression(ternaryexpression *
         }
     }
 
-    throw oexceprion(oexceprion::INTERPRETERERROR, "Unknown opeerator ", to_visit->o1->line());    
+    throw oexception(oexception::INTERPRETERERROR, "Unknown opeerator ", to_visit->o1->line());    
     return std::shared_ptr<object>(new onull());
 }
 
@@ -167,19 +167,20 @@ std::shared_ptr<object> interpreter::visit_unaryexpression(unaryexpression *to_v
                 break;
         }
     }
-    catch(const oexceprion &e)
+    catch(const oexception &e)
     {
-        throw oexceprion(oexceprion::INTERPRETERERROR, e.to_string(), to_visit->op->line());
+        throw oexception(oexception::INTERPRETERERROR, e.to_string(), to_visit->op->line());
     }
     return std::shared_ptr<object>(new onull());
 }
 
 std::shared_ptr<object> interpreter::visit_variableexpression(variableexpression *to_visit)
 {
-
+    return this->env.get(to_visit->name);
 }
 
 void interpreter::visit_varstatement(varstatement *to_visit)
 {
-
+    std::shared_ptr<object> val = this->evaluate(to_visit->exp);
+    this->env.define(to_visit->name, val);
 }

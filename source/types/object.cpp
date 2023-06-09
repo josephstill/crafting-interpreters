@@ -15,7 +15,7 @@ std::shared_ptr<object> object::operator+(const std::shared_ptr<object> &other)
 {
     std::stringstream stream;
     stream << this->type_name() << " does not support addition by " << other->type_name();
-    throw oexceprion(oexceprion::RUNTIMEERROR, stream.str(), -1);
+    throw oexception(oexception::RUNTIMEERROR, stream.str(), -1);
 
     return std::shared_ptr<object>(nullptr);    
 }
@@ -24,7 +24,7 @@ std::shared_ptr<object> object::operator-(const std::shared_ptr<object> &other)
 {
     std::stringstream stream;
     stream << this->type_name() << " does not support cubtraction by " << other->type_name();
-    throw oexceprion(oexceprion::RUNTIMEERROR, stream.str(), -1);
+    throw oexception(oexception::RUNTIMEERROR, stream.str(), -1);
 
     return std::shared_ptr<object>(nullptr); 
 }
@@ -33,7 +33,7 @@ std::shared_ptr<object> object::operator*(const std::shared_ptr<object> &other)
 {
     std::stringstream stream;
     stream << this->type_name() << " does not support multiplication by " << other->type_name();
-    throw oexceprion(oexceprion::RUNTIMEERROR, stream.str(), -1);
+    throw oexception(oexception::RUNTIMEERROR, stream.str(), -1);
 
     return std::shared_ptr<object>(nullptr); 
 }
@@ -42,7 +42,7 @@ std::shared_ptr<object> object::operator/(const std::shared_ptr<object> &other)
 {
     std::stringstream stream;
     stream << this->type_name() << " does not support division by " << other->type_name();
-    throw oexceprion(oexceprion::RUNTIMEERROR, stream.str(), -1);
+    throw oexception(oexception::RUNTIMEERROR, stream.str(), -1);
 
     return std::shared_ptr<object>(nullptr); 
 }   
@@ -51,7 +51,7 @@ std::shared_ptr<object> object::operator<(const std::shared_ptr<object> &other)
 {
     std::stringstream stream;
     stream << this->type_name() << " does not support comparison to " << other->type_name();
-    throw oexceprion(oexceprion::RUNTIMEERROR, stream.str(), -1);
+    throw oexception(oexception::RUNTIMEERROR, stream.str(), -1);
 
     return std::shared_ptr<object>(nullptr); 
 }
@@ -65,7 +65,7 @@ std::shared_ptr<object> object::operator>(const std::shared_ptr<object> &other)
 {
     std::stringstream stream;
     stream << this->type_name() << " does not support comparison to " << other->type_name();
-    throw oexceprion(oexceprion::RUNTIMEERROR, stream.str(), -1);
+    throw oexception(oexception::RUNTIMEERROR, stream.str(), -1);
 
     return std::shared_ptr<object>(nullptr); 
 }
@@ -89,7 +89,7 @@ object &object::operator=(const std::shared_ptr<object> &other)
 {
     std::stringstream stream;
     stream << this->type_name() << " does not support assignment by " << other->type_name();
-    throw oexceprion(oexceprion::RUNTIMEERROR, stream.str(), -1);
+    throw oexception(oexception::RUNTIMEERROR, stream.str(), -1);
 
     return *this;
 }
@@ -98,7 +98,7 @@ object &object::operator+=(const std::shared_ptr<object> &other)
 {
     std::stringstream stream;
     stream << this->type_name() << " does not support add by " << other->type_name();
-    throw oexceprion(oexceprion::RUNTIMEERROR, stream.str(), -1);
+    throw oexception(oexception::RUNTIMEERROR, stream.str(), -1);
 
     return *this;
 }
@@ -107,7 +107,7 @@ object &object::operator-=(const std::shared_ptr<object> &other)
 {
     std::stringstream stream;
     stream << this->type_name() << " does not support subtract by " << other->type_name();
-    throw oexceprion(oexceprion::RUNTIMEERROR, stream.str(), -1);
+    throw oexception(oexception::RUNTIMEERROR, stream.str(), -1);
 
     return *this;
 }
@@ -116,7 +116,7 @@ object &object::operator*=(const std::shared_ptr<object> &other)
 {
     std::stringstream stream;
     stream << this->type_name() << " does not support multiply by " << other->type_name();
-    throw oexceprion(oexceprion::RUNTIMEERROR, stream.str(), -1);
+    throw oexception(oexception::RUNTIMEERROR, stream.str(), -1);
 
     return *this;
 }
@@ -125,7 +125,7 @@ object &object::operator*=(double other)
 {
     std::stringstream stream;
     stream << this->type_name() << " does not support multiply by double";
-    throw oexceprion(oexceprion::RUNTIMEERROR, stream.str(), -1);
+    throw oexception(oexception::RUNTIMEERROR, stream.str(), -1);
 
     return *this;    
 }   
@@ -134,7 +134,7 @@ object &object::operator/=(const std::shared_ptr<object> &other)
 {
     std::stringstream stream;
     stream << this->type_name() << " does not support divide by " << other->type_name();
-    throw oexceprion(oexceprion::RUNTIMEERROR, stream.str(), -1);
+    throw oexception(oexception::RUNTIMEERROR, stream.str(), -1);
 
     return *this;
 }   
@@ -143,7 +143,7 @@ bool object::operator!() const
 {
     std::stringstream stream;
     stream << this->type_name() << " does not suport boolean operations";
-    throw oexceprion(oexceprion::RUNTIMEERROR, stream.str(), -1);
+    throw oexception(oexception::RUNTIMEERROR, stream.str(), -1);
 
     return false;    
 }

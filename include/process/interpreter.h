@@ -2,6 +2,7 @@
 #define INTERPRETER_H
 
 #include <vector>
+#include "process/environment.h"
 #include "generated/statement/statementvisitor.h"
 #include "generated/expression/expressionvisitor.h"
 
@@ -26,6 +27,8 @@ private:
 
     std::shared_ptr<object> evaluate(std::shared_ptr<expression> &exp);
     void execute(std::shared_ptr<statement> &stmt);   
+
+    environment env;
 };
 
 #endif
