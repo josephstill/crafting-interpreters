@@ -173,3 +173,13 @@ std::shared_ptr<object> interpreter::visit_unaryexpression(unaryexpression *to_v
     }
     return std::shared_ptr<object>(new onull());
 }
+
+std::shared_ptr<object> interpreter::visit_variableexpression(variableexpression *to_visit)
+{
+
+}
+
+void interpreter::visit_varstatement(varstatement *to_visit)
+{
+
+}

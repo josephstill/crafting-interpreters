@@ -19,6 +19,8 @@ public:
     virtual void visit_printstatement(printstatement *to_visit);
     virtual std::shared_ptr<object> visit_ternaryexpression(ternaryexpression *to_visit);
     virtual std::shared_ptr<object> visit_unaryexpression(unaryexpression *to_visit);
+    virtual std::shared_ptr<object> visit_variableexpression(variableexpression *to_visit);
+    virtual void visit_varstatement(varstatement *to_visit);
 
 private:
 

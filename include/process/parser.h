@@ -21,6 +21,8 @@ public:
 private:
     bool at_end(std::vector<std::shared_ptr<token>> &tokens, int *index) const;
     std::shared_ptr<expression> comparison(std::vector<std::shared_ptr<token>> &tokens, int *index);
+    std::shared_ptr<token> consume(std::vector<std::shared_ptr<token>> &tokens, int *index, tokentype typ, std::string err);
+    std::shared_ptr<statement> declaration(std::vector<std::shared_ptr<token>> &tokens, int *index);
     std::shared_ptr<expression> equality(std::vector<std::shared_ptr<token>> &tokens, int *index);
     void error(std::string message, std::shared_ptr<token> tok);
     std::shared_ptr<expression> expr(std::vector<std::shared_ptr<token>> &tokens, int *index);

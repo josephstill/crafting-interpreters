@@ -54,4 +54,12 @@ std::shared_ptr<object> astprinter::visit_unaryexpression(unaryexpression *to_vi
     return ret;
 }
 
+std::shared_ptr<object> astprinter::visit_variableexpression(variableexpression *to_visit)
+{
+    std::stringstream stream;
+    stream << to_visit->name;
+    std::shared_ptr<object> ret(new ostring(stream.str()));
+    return ret;        
+}
+
 

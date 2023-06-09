@@ -16,6 +16,7 @@ public:
     virtual std::shared_ptr<object> visit_groupingexpression(groupingexpression *to_visit);
     virtual std::shared_ptr<object> visit_literalexpression(literalexpression *to_visit);
     virtual std::shared_ptr<object> visit_unaryexpression(unaryexpression *to_visit);
+    virtual std::shared_ptr<object> visit_variableexpression(variableexpression *to_visit);
 };
 
 #endif

@@ -3,3 +3,4 @@ binary   : expression left, token op, expression right
 grouping : expression exp
 literal  : object value
 unary    : token op, expression right
+variable : token name

@@ -13,9 +13,11 @@
 #include "generated/expression/groupingexpression.h"
 #include "generated/expression/literalexpression.h"
 #include "generated/expression/unaryexpression.h"
+#include "generated/expression/variableexpression.h"
 
 #include "generated/statement/printstatement.h"
 #include "generated/statement/expressionstatement.h"
+#include "generated/statement/varstatement.h"
 
 parser::parser():
     err(false)
@@ -47,6 +49,41 @@ std::shared_ptr<expression> parser::comparison(std::vector<std::shared_ptr<token
     }
 
     return exp;
+}
+
+std::shared_ptr<token> parser::consume(std::vector<std::shared_ptr<token>> &tokens, int *index, tokentype typ, std::string err)
+{
+    if (*index < tokens.size())
+    {
+        if (tokens[*index]->get_token_type() == typ)
+        {
+            std::shared_ptr<token> ret = tokens[*index];
+            *index += 1;
+            return ret;
+        }    
+    }
+    this->error(err, tokens[(*index) - 1]);
+    return std::shared_ptr<token>(nullptr);
+}
+
+std::shared_ptr<statement> parser::declaration(std::vector<std::shared_ptr<token>> &tokens, int *index)
+{
+    if (this->match(tokens, index, {VAR})) 
+    {
+        std::shared_ptr<token> name = this->consume(tokens, index, IDENTIFIER, "Expect variable name.");
+
+        std::shared_ptr<object> value(new onull());
+        std::shared_ptr<expression> asn(new literalexpression(value));
+        
+        if (this->match(tokens, index, {EQUAL}))
+        {
+            asn = this->expr(tokens, index);
+        }
+
+        this->consume(tokens, index, SEMICOLON, "Expect ';' after variable declaration.");
+        return std::shared_ptr<statement>(new varstatement(name, asn));
+    } 
+    return this->stmt(tokens, index);
 }
 
 std::shared_ptr<expression> parser::equality(std::vector<std::shared_ptr<token>> &tokens, int *index)
@@ -173,7 +210,7 @@ std::vector<std::shared_ptr<statement>> parser::parse(std::vector<std::shared_pt
     {
         while (!this->at_end(tokens, &index)) 
         {
-            ret.push_back(this->stmt(tokens, &index));
+            ret.push_back(this->declaration(tokens, &index));
         }
     }
     catch(const oexceprion &e)
@@ -211,6 +248,11 @@ std::shared_ptr<expression> parser::primary(std::vector<std::shared_ptr<token>> 
     if (this->match(tokens, index, {NUMBER, STRING})) 
     {
         return std::shared_ptr<expression>(new literalexpression(tokens[(*index) - 1]->literal()));        
+    }
+
+    if (this->match(tokens, index, {IDENTIFIER})) 
+    {
+        return std::shared_ptr<expression>(new variableexpression(tokens[(*index) - 1]));
     }
 
     if (this->match(tokens, index, {LEFT_PAREN})) 
